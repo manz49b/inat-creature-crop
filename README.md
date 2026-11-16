@@ -14,6 +14,8 @@ A photo with several animals gives one crop each (up to 3; change this in `promp
 
 Works on Mac and Windows with JPG, PNG, WEBP and camera RAW files (CR2, CR3, NEF, ARW, DNG, RAF, ORF, RW2 and others).
 
+> **Never coded before?** Follow the step-by-step [GETTING_STARTED.md](GETTING_STARTED.md) guide instead.
+
 ## 1. One-time setup
 
 You need:
