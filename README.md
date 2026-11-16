@@ -58,17 +58,17 @@ Save it. `.env` is never committed to git, so your key stays on your machine.
    **Windows:** `.venv\Scripts\python run.py`
 
 3. Results go to `output/`:
-   - `<name>_crop.jpg`: the rotated square crop (`<name>_crop2.jpg`, `_crop3.jpg` and so on if there were more animals)
-   - `<name>_boxes.jpg`: what Jev found (green = whole animal, pink = head, cyan = feet, yellow = head direction)
+   - `output/crops/`: the rotated square crops, ready to upload. `<name>_crop.jpg`, plus `<name>_crop2.jpg` and `_crop3.jpg` if there were more animals.
+   - `output/boxes/`: `<name>_boxes.jpg` previews of what Jev found, for checking (green = whole animal, pink = head, cyan = feet, yellow = head direction).
 
-Running it again only processes **new** photos. Any photo that already has a `<name>_crop.jpg` in `output/` is skipped.
-To redo a photo, delete its crop from `output/` and run again.
+Running it again only processes **new** photos. Photos that are already done (they have a `<name>_boxes.jpg` in `output/boxes/`) are skipped, so you can move crops out for upload without them being redone.
+To redo a photo, delete its `_boxes.jpg` and its crops, then run again.
 
 ## Troubleshooting
 
 - **"No API key"**: `.env` is missing, or the key isn't after `TYPESAFE_API_KEY=`.
 - **"No photos found"**: put the files directly in `input/`, not in a subfolder.
-- **"no animal found"**: check `<name>_boxes.jpg`. Jev may have missed it, or its confidence was below `min_confidence`.
+- **"no animal found"**: check `output/boxes/<name>_boxes.jpg`. Jev may have missed it, or its confidence was below `min_confidence`.
 - **"max_tokens_exceeded"**: lower `send_px` or `max_subjects` in `prompt.json`.
 - **401 / 403 errors**: the key is wrong or expired. Make a new one in the console.
 - **Mac: `python3: command not found`** / **Windows: `py` not recognised**: install Python (see setup).

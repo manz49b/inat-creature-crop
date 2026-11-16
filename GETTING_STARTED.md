@@ -90,10 +90,11 @@ Paste your key straight after the `=`, with no spaces, then **save** and close t
    **Mac:** `.venv/bin/python run.py`
    **Windows:** `.venv\Scripts\python run.py`
 
-3. Open the **output** folder. Your crops are the files ending in `_crop.jpg`.
+3. Open **output**, then **crops**. Those are your finished photos, ready to upload.
+   (The **boxes** folder next to it shows what Jev spotted. It's only for checking, so you can ignore it.)
 
 Next time, you only need Step 4 (open the terminal in the folder) and Step 6.
-Photos that are already cropped are skipped. To redo one, delete its crop from the output folder.
+Photos that are already done are skipped, so you can move your crops out to upload them and they won't be redone. To redo a photo, delete its picture in output/boxes (and any old crops of it).
 
 ---
 
@@ -103,4 +104,4 @@ Photos that are already cropped are skipped. To redo one, delete its crop from t
 - **"No API key":** the key isn't saved in the `.env` file. Repeat the end of Step 5.
 - **"401" or "403":** the key is wrong. Copy it again from the TypeSafe website.
 - **"No photos found":** put the photos directly in the input folder, not in a folder inside it.
-- **A crop looks wrong:** look at the matching `_boxes.jpg` in the output folder to see what Jev spotted.
+- **A crop looks wrong:** look at the matching picture in output/boxes to see what Jev spotted.
