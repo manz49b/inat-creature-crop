@@ -78,7 +78,7 @@ def build_questions(prompt, ref):
 
 def ask_jev(jpeg, prompt=PROMPT):
     if not API_KEY:
-        raise RuntimeError("No API key: put TYPESAFE_API_KEY=... in moth_crop/.env")
+        raise RuntimeError("No API key: put TYPESAFE_API_KEY=... in inat-creature-crop/.env")
     ref = str(uuid.uuid4())
     payload = {
         "model": MODEL,

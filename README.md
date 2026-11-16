@@ -1,4 +1,4 @@
-# moth_crop
+# inat-creature-crop
 
 Finds the moths, butterflies, other bugs and birds in your photos, turns each one to a natural pose,
 and crops each to its own 512 × 512 square. Jev ([TypeSafe](https://docs.typesafe.ai/primitives/box)) does the finding.
