@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import adjust  # noqa: E402
 import boxes  # noqa: E402
+import rank  # noqa: E402
 
 HERE = Path(__file__).parent
 IN, OUT = HERE / "input", HERE / "output"
@@ -65,6 +66,8 @@ def main():
             print(f"{tag}: {s['kind']} ({s['view']} view), {s['rule']}{turn} -> output/crops/{name}")
         ok += 1
     print(f"Done: {ok}/{len(photos)} processed. Crops are in {CROPS}")
+    print("Grouping and ranking all crops into output/final/ ...")
+    rank.main()
 
 
 if __name__ == "__main__":

@@ -90,7 +90,9 @@ Paste your key straight after the `=`, with no spaces, then **save** and close t
    **Mac:** `.venv/bin/python run.py`
    **Windows:** `.venv\Scripts\python run.py`
 
-3. Open **output**, then **crops**. Those are your finished photos, ready to upload.
+3. Open **output**, then **final**. Every creature's photos are grouped together, and the one with **_1_** in its name
+   is the best (for example `g0084_1_...` is the best photo of creature 84, and `g0084_2_...` the next best).
+   The **crops** folder has the plain crops if you want them.
    If a photo was too dark or too bright, a fixed copy is also saved in **crops_adjusted**. Use whichever looks better.
    (The **boxes** folder next to it shows what Jev spotted. It's only for checking, so you can ignore it.)
 

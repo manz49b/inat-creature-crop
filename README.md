@@ -58,6 +58,7 @@ Save it. `.env` is never committed to git, so your key stays on your machine.
    **Windows:** `.venv\Scripts\python run.py`
 
 3. Results go to `output/`:
+   - `output/final/`: **start here.** Every crop, grouped by creature and ranked best-first: `g0084_1_IMG_6120_crop.jpg` is group 84's best photo, `g0084_2_...` its 2nd best, and so on. Brightness-fixed versions are used where they exist.
    - `output/crops/`: the rotated square crops, ready to upload. `<name>_crop.jpg`, plus `<name>_crop2.jpg` and `_crop3.jpg` if there were more animals.
    - `output/crops_adjusted/`: brightened or contrast-fixed copies of any crops where the animal was too dark, too bright or flat. Only crops that needed fixing appear here, and the originals stay in `crops/`.
    - `output/boxes/`: `<name>_boxes.jpg` previews of what Jev found, for checking (green = whole animal, pink = head, cyan = feet, yellow = head direction).
@@ -75,6 +76,16 @@ To run it again on all existing crops (for example after changing the thresholds
 
 **Mac:** `.venv/bin/python adjust.py`
 **Windows:** `.venv\Scripts\python adjust.py`
+
+### Grouping and ranking (`output/final/`)
+
+This runs automatically at the end of every run, and costs nothing (no Jev). Two crops count as the same creature
+when they were taken within 90 seconds of each other and the animal's shape and colours match. Crops from the same
+photo are never grouped together. Within a group, the sharpest crop ranks first. Settings are at the top of `rank.py`.
+They're cautious on purpose: you may get the same bird split across a few groups, but different moths on the
+same wall shouldn't be merged. `final/` is rebuilt from scratch every time.
+
+To rerun it on its own: **Mac:** `.venv/bin/python rank.py` · **Windows:** `.venv\Scripts\python rank.py`
 
 ## Troubleshooting
 
