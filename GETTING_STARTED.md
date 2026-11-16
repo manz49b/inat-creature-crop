@@ -91,6 +91,7 @@ Paste your key straight after the `=`, with no spaces, then **save** and close t
    **Windows:** `.venv\Scripts\python run.py`
 
 3. Open **output**, then **crops**. Those are your finished photos, ready to upload.
+   If a photo was too dark or too bright, a fixed copy is also saved in **crops_adjusted**. Use whichever looks better.
    (The **boxes** folder next to it shows what Jev spotted. It's only for checking, so you can ignore it.)
 
 Next time, you only need Step 4 (open the terminal in the folder) and Step 6.
