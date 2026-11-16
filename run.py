@@ -1,4 +1,4 @@
-"""Crop every photo in input/ so the target's head points up. Results go to output/.
+"""Find each animal in every photo in input/, rotate it to a natural pose and square-crop it into output/.
 
 Usage:  python run.py
 """
@@ -27,20 +27,26 @@ def main():
         print(f"Skipping {len(done)} already in output/ (delete a *_crop.jpg there to redo it)")
     if not photos:
         sys.exit("Nothing new to process.")
-    print(f"{len(photos)} photo(s), target: {boxes.PROMPT['target']}")
+    print(f"{len(photos)} photo(s) to process")
     ok = 0
     for i, path in enumerate(photos, 1):
+        tag = f"[{i}/{len(photos)}] {path.name}"
         try:
             r = boxes.process(path)
         except Exception as e:
-            print(f"[{i}/{len(photos)}] {path.name}: FAILED - {e}")
+            print(f"{tag}: FAILED - {e}")
             continue
-        r["crop"].save(OUT / f"{path.stem}_crop.jpg", quality=92)
         r["preview"].save(OUT / f"{path.stem}_boxes.jpg", quality=85)
-        warn = "" if r["present"] in (True, "yes", "Yes") else "  (target may not be in photo)"
-        print(f"[{i}/{len(photos)}] {path.name}: rotated {r['angle']} deg -> output/{path.stem}_crop.jpg{warn}")
+        if not r["subjects"]:
+            print(f"{tag}: no animal found (see output/{path.stem}_boxes.jpg)")
+            continue
+        for j, s in enumerate(r["subjects"], 1):
+            name = f"{path.stem}_crop.jpg" if j == 1 else f"{path.stem}_crop{j}.jpg"
+            s["crop"].save(OUT / name, quality=92)
+            turn = f" {s['angle']:+.0f} deg" if s["angle"] else ""
+            print(f"{tag}: {s['kind']} ({s['view']} view), {s['rule']}{turn} -> output/{name}")
         ok += 1
-    print(f"Done: {ok}/{len(photos)} cropped into {OUT}")
+    print(f"Done: {ok}/{len(photos)} processed into {OUT}")
 
 
 if __name__ == "__main__":

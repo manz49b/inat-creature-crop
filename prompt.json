@@ -1,10 +1,31 @@
 {
-  "_comment": "{target}/{photo} are filled in. 'object' = whole subject, 'head' = the end that should point up after rotation.",
-  "target": "the moth",
+  "_comment": "One Jev request per photo. The {n}-tagged questions are repeated for each slot up to max_subjects ({n} = 'largest', '2nd largest', ...). {photo} is filled in automatically.",
+  "max_subjects": 3,
+  "send_px": 800,
+  "crop_px": 512,
+  "min_confidence": 0.3,
+  "min_head_offset": 0.2,
+  "rotate_kinds": ["moth", "butterfly", "other insect or bug"],
   "state": "A photo: {photo}",
-  "questions": {
-    "present": {"type": "noul", "instructions": "Is {target} visible in {photo}?"},
-    "object": {"type": "box", "instructions": "Draw a tight box around the whole of {target} in {photo}, including all wings and antennae tips."},
-    "head": {"type": "box", "instructions": "Draw a tight box around just the head of {target} in {photo} (the end with the eyes and antennae, not the wings)."}
+  "count": {
+    "type": "choice",
+    "instructions": "How many separate animals (insects, birds or other creatures) are clearly visible in {photo}?",
+    "criteria": {"0": "no animal", "1": "exactly one", "2": "exactly two", "3+": "three or more"}
+  },
+  "per_subject": {
+    "kind": {
+      "type": "choice",
+      "instructions": "What is the {n} animal in {photo}?",
+      "criteria": {"moth": null, "butterfly": null, "other insect or bug": "beetles, bees, flies, spiders, etc.", "bird": null, "other animal": null}
+    },
+    "view": {
+      "type": "choice",
+      "instructions": "How is the {n} animal in {photo} seen by the camera?",
+      "criteria": {"top": "from above or below: its back or belly faces the camera (e.g. a moth or butterfly with its wings spread flat)", "side": "in profile: its side faces the camera (e.g. a butterfly with its wings closed upright, a perched bird)"}
+    },
+    "object": {"type": "box", "instructions": "Draw a tight box around the whole of the {n} animal in {photo}, including wings, antennae, legs and tail."},
+    "head": {"type": "box", "instructions": "Draw a tight box around just the head of the {n} animal in {photo}."},
+    "feet_visible": {"type": "noul", "instructions": "Are the feet or legs of the {n} animal in {photo} visible, and is it clear which way is down for it?"},
+    "feet": {"type": "box", "instructions": "Draw a tight box around the feet (or the ends of the legs) of the {n} animal in {photo}."}
   }
 }

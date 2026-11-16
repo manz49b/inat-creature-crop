@@ -1,7 +1,16 @@
 # moth_crop
 
-Turns photos of moths so the head points up, then crops each one to a 512 × 512 square.
-Jev ([TypeSafe](https://docs.typesafe.ai/primitives/box)) finds the moth and its head in each photo.
+Finds the moths, butterflies, other bugs and birds in your photos, turns each one to a natural pose,
+and crops each to its own 512 × 512 square. Jev ([TypeSafe](https://docs.typesafe.ai/primitives/box)) does the finding.
+
+How each animal is turned:
+- **Moth:** head up.
+- **Butterfly, seen from above (wings open):** head up.
+- **Other insects, or a butterfly with its wings closed:** feet at the bottom. If its feet aren't visible, its head goes to whichever side (left or right) is closer.
+- **Birds and other animals:** cropped but not rotated, since photos of them are usually level already.
+- **Tiny or unclear subjects** (Jev can't tell which end is the head): cropped but not rotated.
+
+A photo with several animals gives one crop each (up to 3; change this in `prompt.json`).
 
 Works on Mac and Windows with JPG, PNG, WEBP and camera RAW files (CR2, CR3, NEF, ARW, DNG, RAF, ORF, RW2 and others).
 
@@ -47,8 +56,8 @@ Save it. `.env` is never committed to git, so your key stays on your machine.
    **Windows:** `.venv\Scripts\python run.py`
 
 3. Results go to `output/`:
-   - `<name>_crop.jpg`: the rotated square crop
-   - `<name>_boxes.jpg`: what Jev found (green = whole moth, pink = head, yellow = rotation line)
+   - `<name>_crop.jpg`: the rotated square crop (`<name>_crop2.jpg`, `_crop3.jpg` and so on if there were more animals)
+   - `<name>_boxes.jpg`: what Jev found (green = whole animal, pink = head, cyan = feet, yellow = head direction)
 
 Running it again only processes **new** photos. Any photo that already has a `<name>_crop.jpg` in `output/` is skipped.
 To redo a photo, delete its crop from `output/` and run again.
@@ -57,12 +66,15 @@ To redo a photo, delete its crop from `output/` and run again.
 
 - **"No API key"**: `.env` is missing, or the key isn't after `TYPESAFE_API_KEY=`.
 - **"No photos found"**: put the files directly in `input/`, not in a subfolder.
-- **"(target may not be in photo)"**: Jev didn't confirm there was a moth, so check `<name>_boxes.jpg`.
+- **"no animal found"**: check `<name>_boxes.jpg`. Jev may have missed it, or its confidence was below `min_confidence`.
+- **"max_tokens_exceeded"**: lower `send_px` or `max_subjects` in `prompt.json`.
 - **401 / 403 errors**: the key is wrong or expired. Make a new one in the console.
 - **Mac: `python3: command not found`** / **Windows: `py` not recognised**: install Python (see setup).
 
 ## Customising
 
-- **Something other than moths?** Change `target` in `prompt.json`, e.g. `"the beetle"`.
+- **`prompt.json` settings:** `max_subjects` (most animals per photo, default 3), `send_px` (size sent to Jev, default 800, and smaller is cheaper), `crop_px` (output size, default 512), `min_confidence` (skip weak detections), `rotate_kinds` (which animals get rotated), `min_head_offset` (how clear the head has to be before it rotates), and the animal types in `kind`.
+- **Rotation rules:** see `pose_angle` in `boxes.py`.
+- **Cost:** one Jev request per photo, whatever the number of animals. Jev charges per input token, and the image is most of that.
 - The logic lives in `boxes.py`. `run_boxes.ipynb` does the same job in Jupyter, with inline previews.
-- Notes: Jev boxes are axis-aligned, with 0–1 coordinates. Photos are turned upright using EXIF and resized to 280–1568 px before they're sent.
+- Notes: Jev boxes are axis-aligned, with 0–1 coordinates. Photos are turned upright using EXIF before they're sent. Crops are cut from the full-resolution photo.
