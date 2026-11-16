@@ -99,6 +99,15 @@ Paste your key straight after the `=`, with no spaces, then **save** and close t
 Next time, you only need Step 4 (open the terminal in the folder) and Step 6.
 Photos that are already done are skipped, so you can move your crops out to upload them and they won't be redone. To redo a photo, delete its picture in output/boxes (and any old crops of it).
 
+### Starting fresh
+
+To empty all the output folders (your photos in **input** are kept), run the same command with `--clear` on the end:
+
+**Mac:** `.venv/bin/python run.py --clear`
+**Windows:** `.venv\Scripts\python run.py --clear`
+
+It asks you to confirm: type `y` and press Enter.
+
 ---
 
 ## If something goes wrong

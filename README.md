@@ -66,6 +66,18 @@ Save it. `.env` is never committed to git, so your key stays on your machine.
 Running it again only processes **new** photos. Photos that are already done (they have a `<name>_boxes.jpg` in `output/boxes/`) are skipped, so you can move crops out for upload without them being redone.
 To redo a photo, delete its `_boxes.jpg` and its crops, then run again.
 
+### Options
+
+Everything is on by default. Add any of these after `run.py` (e.g. `.venv/bin/python run.py --no-adjust`):
+
+| Option | What it does |
+|---|---|
+| `--no-crop` | Don't send anything to Jev. Just redo the fixing and ranking on crops you already have (free). |
+| `--no-adjust` | Skip the brightness/contrast fixing. |
+| `--no-rank` | Skip grouping and ranking into `output/final/`. |
+| `--clear` | Empty all the output folders and start fresh. It asks first; add `--yes` to skip the question. Your photos in `input/` are never touched. |
+| `--help` | List the options. |
+
 ### Brightness and contrast fixing
 
 This runs automatically on new crops. It doesn't use Jev, so it's free. Each crop is measured in the middle, where the animal is,

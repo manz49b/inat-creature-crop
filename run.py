@@ -1,7 +1,13 @@
 """Find each animal in every photo in input/, rotate it to a natural pose and square-crop it into output/crops/ (debug previews go to output/boxes/).
 
-Usage:  python run.py
+Usage:  python run.py                 crop new photos, fix brightness, group and rank (everything on)
+        python run.py --no-adjust     skip brightness/contrast fixing
+        python run.py --no-crop       don't send anything to Jev; just redo fixing/ranking on existing crops
+        python run.py --no-rank       skip grouping and ranking into output/final/
+        python run.py --clear         empty all output folders (asks first; add --yes to skip the question)
 """
+import argparse
+import shutil
 import sys
 from pathlib import Path
 
@@ -24,7 +30,46 @@ def tidy_old_layout():
             f.rename(dest / f.name)
 
 
+def clear(yes=False):
+    folders = [CROPS, BOXES, adjust.ADJ, rank.FINAL]
+    n = sum(1 for d in folders if d.exists() for _ in d.glob("*.jpg"))
+    if n == 0:
+        print("Output folders are already empty.")
+        return
+    if not yes and input(f"Delete {n} files from output/ (your photos in input/ are kept)? [y/N] ").strip().lower() != "y":
+        print("Cancelled.")
+        return
+    for d in folders:
+        if d.exists():
+            shutil.rmtree(d)
+    print(f"Cleared {n} files. Your photos in input/ were not touched.")
+
+
+def parse_args():
+    p = argparse.ArgumentParser(description="Crop, fix and rank animal photos. Everything is on by default.")
+    p.add_argument("--no-crop", action="store_true", help="don't call Jev; reuse existing crops")
+    p.add_argument("--no-adjust", action="store_true", help="skip brightness/contrast fixing")
+    p.add_argument("--no-rank", action="store_true", help="skip grouping/ranking into output/final/")
+    p.add_argument("--clear", action="store_true", help="empty all output folders, then stop")
+    p.add_argument("--yes", "-y", action="store_true", help="don't ask before clearing")
+    return p.parse_args()
+
+
 def main():
+    args = parse_args()
+    if args.clear:
+        return clear(args.yes)
+    if not args.no_crop:
+        crop_all(do_adjust=not args.no_adjust)
+    elif not args.no_adjust:
+        print("Fixing brightness/contrast on existing crops...")
+        adjust.main()
+    if not args.no_rank:
+        print("Grouping and ranking all crops into output/final/ ...")
+        rank.main()
+
+
+def crop_all(do_adjust=True):
     IN.mkdir(exist_ok=True)
     CROPS.mkdir(parents=True, exist_ok=True)
     BOXES.mkdir(parents=True, exist_ok=True)
@@ -40,7 +85,8 @@ def main():
     if done:
         print(f"Skipping {len(done)} already done (to redo one, delete its file in output/boxes/ and output/crops/)")
     if not photos:
-        sys.exit("Nothing new to process.")
+        print("No new photos to crop.")
+        return
     print(f"{len(photos)} photo(s) to process")
     ok = 0
     for i, path in enumerate(photos, 1):
@@ -58,7 +104,7 @@ def main():
             name = f"{path.stem}_crop.jpg" if j == 1 else f"{path.stem}_crop{j}.jpg"
             s["crop"].save(CROPS / name, quality=92)
             turn = f" {s['angle']:+.0f} deg" if s["angle"] else ""
-            fixed, issues, _, _ = adjust.adjust(s["crop"])
+            fixed, issues, _, _ = adjust.adjust(s["crop"]) if do_adjust else (None, [], None, None)
             if fixed is not None:
                 adjust.ADJ.mkdir(parents=True, exist_ok=True)
                 fixed.save(adjust.ADJ / name, quality=92)
@@ -66,8 +112,6 @@ def main():
             print(f"{tag}: {s['kind']} ({s['view']} view), {s['rule']}{turn} -> output/crops/{name}")
         ok += 1
     print(f"Done: {ok}/{len(photos)} processed. Crops are in {CROPS}")
-    print("Grouping and ranking all crops into output/final/ ...")
-    rank.main()
 
 
 if __name__ == "__main__":
