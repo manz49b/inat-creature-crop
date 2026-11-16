@@ -1,0 +1,10 @@
+{
+  "_comment": "{target}/{photo} are filled in. 'object' = whole subject, 'head' = the end that should point up after rotation.",
+  "target": "the moth",
+  "state": "A photo: {photo}",
+  "questions": {
+    "present": {"type": "noul", "instructions": "Is {target} visible in {photo}?"},
+    "object": {"type": "box", "instructions": "Draw a tight box around the whole of {target} in {photo}, including all wings and antennae tips."},
+    "head": {"type": "box", "instructions": "Draw a tight box around just the head of {target} in {photo} (the end with the eyes and antennae, not the wings)."}
+  }
+}
